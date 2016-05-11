@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+  <script>
+  var maxLearningRate = 0.2;
+
+  var registry = [];
+  var stewards = [];
+  var researchers = [];
+
+  function addSteward(initialReputation){
+    if(initialReputation < 0 || initialReputation > 1){
+      alert('reputation scores must be in [0,1]');
+      return;
+    }
+    // push new id to list of stewards
+    stewards.push(registry.length);
+    // add steward to registry at index matching id
+    registry.push({type: 'steward', rep: initialReputation});
+  }
+
+  function addResearcher(initialReputation){
+    // push new id to list of researchers
+    researchers.push(registry.length);
+    // add researcher to registry at index matching id
+    registry.push({type: 'researcher', rep: initialReputation});
+  }
+
+  function feedbackFromTo(from, to, score){
+    if(score < 0 || score > 1){
+      alert('feedback scores must be in [0,1]');
+      return;
+    }
+    var learningRate = registry[from].rep * maxLearningRate;
+    registry[to].rep = learningRate * score + registry[to].rep * (1 - learningRate);
+  }
+
+  function viewRegistry(){
+    var html = '';
+    for(id in registry){
+      html += `${id}: ${JSON.stringify(registry[id])}<br>`
+    }
+    document.getElementById('display').innerHTML = html;
+  }
+
+  function addStewardButton(){
+    addSteward(document.getElementById('rep').value);
+    document.getElementById('rep').value = '';
+    viewRegistry();
+  }
+
+  function addResearcherButton(){
+    addResearcher(document.getElementById('rep').value);
+    document.getElementById('rep').value = '';
+    viewRegistry();
+  }
+
+  function addFeedback(){
+    var values = document.getElementById('feedback').value.split(' ');
+    feedbackFromTo(values[0],values[1],values[2]);
+    document.getElementById('feedback').value = '';
+    viewRegistry();
+  }
+  </script>
+</head>
+<body>
+  <div id='display'></div>
+  <button onclick='viewRegistry()'>View Registry</button>
+  <button onclick='addResearcherButton()'>Add Researcher</button>
+  <button onclick='addStewardButton()'>Add Steward</button>
+  Initial Reputation: <input id='rep'></input>
+  <br>
+  <button onclick='addFeedback()'>Add Feedback</button>
+  Feedback (id, id, score): <input id='feedback'></input>
+</body>
+</html>
