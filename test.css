@@ -1,0 +1,11 @@
+body {
+  align-items: center;
+  background-color: #EEF;
+  display: flex;
+  flex-direction: column;
+  font-family: monospace;
+  font-size: 1.25em;
+  min-height: 100vh;
+  justify-content: center;
+  margin: 2em;
+}
